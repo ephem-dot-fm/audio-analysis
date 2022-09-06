@@ -1,1 +1,1 @@
-worker = python3 red_scan.py
+web = python3 red_scan.py
