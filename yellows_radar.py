@@ -8,6 +8,7 @@ import os
 from collections import deque
 
 from get_hsl import hsl
+from red import rid_soundfiles
 
 
 stations = {
@@ -68,6 +69,9 @@ def write_stream(station_name, file_duration):
 
     # analyze
     hsl(file_name)
+
+    # delete all files older than one minute
+    rid_soundfiles()
 
 
 if __name__ == "__main__":
