@@ -1,11 +1,10 @@
 from webbrowser import get
-# from hue import get_hue
+from hue import get_hue
 
 
 def hsl(file_name):
-    print(file_name)
-    # hue = get_hue('cnn', f'{file_name}.mp3')
-    # print("HUE", hue)
+    hue = get_hue('cnn', f'{file_name}.mp3')
+    print("HUE", hue)
 
 
 if __name__ == "__main__":
