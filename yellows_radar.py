@@ -7,6 +7,8 @@ import subprocess
 import os
 from collections import deque
 
+from get_hsl import hsl
+
 
 stations = {
     'DDR': 'https://dublindigitalradio.out.airtime.pro/dublindigitalradio_a',
@@ -64,8 +66,8 @@ def write_stream(station_name, file_duration):
     mp3_to_wav(file_name)
 
     # analyze
-    get_hsl(file_name)
+    hsl(file_name)
 
 
 if __name__ == "__main__":
-    pass
+    hsl('soundbytes/SOMACLQ_1662489047')

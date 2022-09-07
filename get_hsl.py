@@ -2,7 +2,7 @@ from webbrowser import get
 from hue import get_hue
 
 
-def get_hsl(file_name):
+def hsl(file_name):
     hue = get_hue('cnn', f'{file_name}.mp3')
     print("HUE", hue)
 
