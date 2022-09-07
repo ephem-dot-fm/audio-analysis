@@ -61,8 +61,10 @@ def write_stream(station_name, file_duration):
     p.terminate()
 
     # convert mp3 to WAV file
-    mp3_to_wav(file_name)  # converting to WAV file
-    wav_file_name = f'{file_name}.wav'
+    mp3_to_wav(file_name)
+
+    # analyze
+    get_hsl(file_name)
 
 
 if __name__ == "__main__":
