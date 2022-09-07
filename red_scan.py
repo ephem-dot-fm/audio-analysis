@@ -247,6 +247,7 @@ def _to_sliding_window(data, window_length, hop_length):
 
 
 if __name__ == "__main__":
+    print('aloha from red_scan')
     model_name = 'cnn'
     input_file = 'soundbytes/SOMACLQ_1662489047.mp3'
 
