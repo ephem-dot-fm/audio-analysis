@@ -52,7 +52,8 @@ def mp3_to_wav(file):
 
 def write_stream(station_name, file_duration):
     print("Beginning to write a new stream")
-    file_name = f'soundbytes/{station_name}_{str(int(time.time()))}'
+    time_to_leave = str(int(time.time()) + 60)
+    file_name = f'soundbytes/{station_name}_{time_to_leave}'
 
     # create a new Process which allows me to write a stream for x amount of time
     p = multiprocessing.Process(
