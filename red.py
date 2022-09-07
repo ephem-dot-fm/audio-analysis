@@ -11,6 +11,10 @@ def rid_soundfiles():
     cur_files = os.listdir(os.curdir)
     print(f'CURRENT FILES: {cur_files}')
     for file in list_of_filenames:
+        print(f'FILE: {file}')
+        if 'starter.txt' in file:
+            continue
+
         timestamp = file.split('_')[1].split('.')[0]
         if int(timestamp) < int(time.time()):
             print(f'REMOVED FILE--{file}')

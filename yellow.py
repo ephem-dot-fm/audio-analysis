@@ -21,5 +21,5 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         all_jobs = schedule.get_jobs()
-        print(f'ALL JOBS INCLUDE: {all_jobs}')
+        # print(f'ALL JOBS INCLUDE: {all_jobs}')
         time.sleep(5)
