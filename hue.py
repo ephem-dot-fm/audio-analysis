@@ -246,7 +246,7 @@ def _to_sliding_window(data, window_length, hop_length):
     return np.concatenate(windowed_data, axis=0)
 
 
-def get_hue(model_name, file_path):
+def hue(model_name, file_path):
     # initialize the model (may be re-used for multiple files)
     classifier = TempoClassifier(model_name)
 
