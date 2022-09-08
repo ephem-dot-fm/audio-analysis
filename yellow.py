@@ -16,7 +16,7 @@ def run_threaded(station_name, file_duration):
 if __name__ == "__main__":
     file_duration = 20
     schedule.every(file_duration).seconds.do(
-        run_threaded, station_name='SOMACLQ', file_duration=file_duration)
+        run_threaded, station_name='SOMADSO', file_duration=file_duration)
 
     while True:
         schedule.run_pending()
