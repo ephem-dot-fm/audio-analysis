@@ -39,11 +39,12 @@ def value(file):
 
 
 def hsl(file_name):
-    # h = hue(file_name)
-    s = saturation(f'{file_name}.wav')
-    v = value(f'{file_name}.wav')
-    print(f'SATURATION IS: {s}')
-    print(f'VALUE IS: {v}')
+    h = hue(file_name)
+    # s = saturation(f'{file_name}.wav')
+    # v = value(f'{file_name}.wav')
+    print(f'HUE IS: {h}')
+    # print(f'SATURATION IS: {s}')
+    # print(f'VALUE IS: {v}')
 
 
 if __name__ == "__main__":
