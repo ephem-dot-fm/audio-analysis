@@ -40,8 +40,8 @@ def value(file):
 
 def hsl(file_name):
     # h = hue(file_name)
-    s = saturation(file_name)
-    v = value(file_name)
+    s = saturation(f'{file_name}.wav')
+    v = value(f'{file_name}.wav')
     print(f'SATURATION IS: {saturation}')
     print(f'VALUE IS: {value}')
 
