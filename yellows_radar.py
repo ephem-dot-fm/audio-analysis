@@ -7,7 +7,7 @@ import subprocess
 import os
 from collections import deque
 
-from get_hsl import hsl
+from hsl import hsl
 from red import rid_soundfiles
 
 
