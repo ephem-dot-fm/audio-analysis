@@ -39,9 +39,9 @@ def value(file):
 
 
 def hsl(file_name):
-    # hue = hue(file_name)
-    saturation = saturation(file_name)
-    value = value(file_name)
+    # h = hue(file_name)
+    s = saturation(file_name)
+    v = value(file_name)
     print(f'SATURATION IS: {saturation}')
     print(f'VALUE IS: {value}')
 
