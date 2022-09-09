@@ -14,6 +14,7 @@ def run_threaded(station_name, file_duration):
 
 # every 20 seconds, begins writing + analyzing a new stream
 if __name__ == "__main__":
+    print("WE'RE GOING!")
     file_duration = 20
     schedule.every(file_duration).seconds.do(
         run_threaded, station_name='SOMADSO', file_duration=file_duration)
