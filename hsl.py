@@ -39,6 +39,7 @@ def value(file):
 
 
 def hsl(file_name):
+    print(f'INSIDE HSL!')
     h = hue(file_name)
     s = saturation(f'{file_name}.wav')
     v = value(f'{file_name}.wav')
