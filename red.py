@@ -5,7 +5,7 @@ import time
 
 def spring_cleaning():
     cwd = os.getcwd()
-    print('CWD: ', cwd)
+    # print('CWD: ', cwd)
     list_of_filenames = glob("soundbytes/*")
     # print(f'LIST OF FILE NAMES: {list_of_filenames}')
     cur_files = os.listdir(os.curdir)
@@ -17,7 +17,7 @@ def spring_cleaning():
 
         timestamp = file.split('_')[1].split('.')[0]
         if int(timestamp) < int(time.time()):
-            print(f'REMOVED FILE--{file}')
+            # print(f'REMOVED FILE--{file}')
             os.remove(f'{os.getcwd()}/{file}')
 
 

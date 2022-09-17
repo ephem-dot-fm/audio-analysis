@@ -4,6 +4,7 @@ from yellows_radar import write_stream
 
 import threading
 import schedule
+import sys
 
 
 def run_threaded(station_name, file_duration):
@@ -14,10 +15,11 @@ def run_threaded(station_name, file_duration):
 
 # every 20 seconds, begins writing + analyzing a new stream
 if __name__ == "__main__":
-    print("WE'RE GOING!")
+    station_key = sys.argv[1]
+    print(f'TESTING STATION {station_key}')
     file_duration = 20
     schedule.every(file_duration).seconds.do(
-        run_threaded, station_name='SOMADSO', file_duration=file_duration)
+        run_threaded, station_name=station_key, file_duration=file_duration)
 
     while True:
         schedule.run_pending()

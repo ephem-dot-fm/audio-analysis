@@ -7,7 +7,7 @@ import subprocess
 import os
 from collections import deque
 
-from hsl import hsl
+from colour import get_colour
 from red import spring_cleaning
 
 
@@ -52,7 +52,7 @@ def mp3_to_wav(file):
 
 
 def write_stream(station_name, file_duration):
-    print("Beginning to write a new stream")
+    # print("Beginning to write a new stream")
     time_to_leave = str(int(time.time()) + 120)
     file_name = f'soundbytes/{station_name}_{time_to_leave}'
 
@@ -68,7 +68,7 @@ def write_stream(station_name, file_duration):
     mp3_to_wav(file_name)
 
     # analyze
-    hsl(file_name)
+    get_colour(file_name)
 
     # delete all files older than one minute
     spring_cleaning()
