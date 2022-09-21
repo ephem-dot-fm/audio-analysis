@@ -1,4 +1,4 @@
-import multiprocessing
+from multiprocessing import Process
 import requests
 import time
 import os
@@ -51,24 +51,34 @@ def mp3_to_wav(file):
         audSeg.export(dst, format="wav")
 
 
-def write_stream(station_name, file_duration):
-    # print("Beginning to write a new stream")
+def write_stream(station_names, file_duration):
     time_to_leave = str(int(time.time()) + 120)
-    file_name = f'soundbytes/{station_name}_{time_to_leave}'
 
-    # create a new Process which allows me to write a stream for x amount of time
-    p = multiprocessing.Process(
-        target=stream_to_mp3, name="Write Stream to MP3", args=(stations[station_name], file_name))
+    # create processes for three different stations then run them
+    processes = []
+    files = []
 
-    p.start()
-    time.sleep(file_duration)
-    p.terminate()
+    for station in station_names:
+        file_name = f'soundbytes/{station}_{time_to_leave}'
+        files.append(file_name)
+        process = Process(
+            target=stream_to_mp3, name="Write Stream to MP3", args=(stations[station], file_name))
+        processes.append(process)
 
-    # convert mp3 to WAV file
-    mp3_to_wav(file_name)
+    print(f'PROCESSES: {processes}')
 
-    # analyze
-    get_colour(file_name)
+    for process in processes:
+        process.start()
+
+    time.sleep(15)
+
+    for process in processes:
+        process.terminate()
+
+    # assuming here that relevant files have been written
+    for file in files:
+        mp3_to_wav(file)  # convert mp3 to WAV file
+        get_colour(file)  # analyze
 
     # delete all files older than one minute
     spring_cleaning()
