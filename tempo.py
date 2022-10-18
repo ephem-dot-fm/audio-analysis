@@ -253,22 +253,25 @@ def get_tempo(model_name, file_path):
     # read the file's features
     features = read_features(file_path)
 
-    # estimate the global tempo
+    # # estimate the global tempo
     tempo = classifier.estimate_tempo(features, interpolate=False)
+    print(tempo)
     return tempo
 
 
 if __name__ == "__main__":
-    print('aloha from red_scan')
-    model_name = 'cnn'
-    input_file = 'soundbytes/SOMACLQ_1662489047.mp3'
+    get_tempo('cnn', 'soundbytes/SOMAMTL_1665971952.wav')
 
-    # initialize the model (may be re-used for multiple files)
-    classifier = TempoClassifier(model_name)
+    # print('aloha from red_scan')
+    # model_name = 'cnn'
+    # input_file = 'soundbytes/SOMACLQ_1662489047.mp3'
 
-    # read the file's features
-    features = read_features(input_file)
+    # # initialize the model (may be re-used for multiple files)
+    # classifier = TempoClassifier(model_name)
 
-    # estimate the global tempo
-    tempo = classifier.estimate_tempo(features, interpolate=False)
-    print(f"Estimated global tempo: {tempo}")
+    # # read the file's features
+    # features = read_features(input_file)
+
+    # # estimate the global tempo
+    # tempo = classifier.estimate_tempo(features, interpolate=False)
+    # print(f"Estimated global tempo: {tempo}")

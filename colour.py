@@ -29,9 +29,9 @@ pitch_values = {
 
 
 # time-based characteristics => base color
-def tempo(file_name):
-    general_tempo = get_tempo('cnn', f'{file_name}.mp3')
-    return general_tempo
+# def retrieve_tempo(file_name):
+#     general_tempo = get_tempo('cnn', f'{file_name}.mp3')
+#     return general_tempo
 
 
 # how saturated color is => loudness
@@ -93,10 +93,12 @@ def lab_to_rgb(l, a, b):
 
 
 def get_colour(file_name):
-    station_name = file_name.split("_")[0]
+    splat = file_name.split("_")
+    timestamp = splat[1]
+    station_name = splat[0].split("/")[1]
 
     # retrieving initial hsl values
-    t = tempo(file_name)
+    t = get_tempo('cnn', f'{file_name}.wav')
     l = loudness(f'{file_name}.wav')
     p = pitch(f'{file_name}.wav')
 
@@ -108,10 +110,20 @@ def get_colour(file_name):
     pitch_percentile = round(get_chroma_range(
         pitch_values['max'], pitch_values['min'], p) * 100)
 
+    # HSL
+    rgb = hsluv.hsluv_to_rgb(
+        [(tempo_percentile / 100) * 180 + 180, loudness_percentile, pitch_percentile])
+
+    return {
+        'station': station_name,
+        'rgb': rgb,
+        'timestamp': timestamp
+    }
+
     # printing hsl input values, to be converted to rgb
-    print(f'TEMPO: {round(t, 2)} bpm ({tempo_percentile}%)')
-    print(f'LOUDNESS: {round(l, 2)} db ({loudness_percentile}%)')
-    print(f'PITCH: {round(p, 2)} hz ({pitch_percentile}%)')
+    # print(f'TEMPO: {round(t, 2)} bpm ({tempo_percentile}%)')
+    # print(f'LOUDNESS: {round(l, 2)} db ({loudness_percentile}%)')
+    # print(f'PITCH: {round(p, 2)} hz ({pitch_percentile}%)')
 
     # LAB IMPLEMENTATION
     # l = pitch_percentile * 120 - 60
@@ -119,16 +131,11 @@ def get_colour(file_name):
     # b = tempo_percentile * 120 - 60
     # [r, g, b] = lab_to_rgb(l, a, b)
 
-    # HSL IMPLEMENTATION
-    rgb = hsluv.hsluv_to_rgb(
-        [(tempo_percentile / 100) * 180 + 180, loudness_percentile, pitch_percentile])
-    print(f'RGB IS: {rgb}')
+    # # print(f'RED: {red}, GREEN: {green}, BLUE: {blue}')
 
-    # print(f'RED: {red}, GREEN: {green}, BLUE: {blue}')
-
-    qui = bg(round(rgb[0] * 255), round(rgb[1] * 255), round(rgb[2] * 255)) + \
-        "                " + bg.rs
-    print(f'{station_name[11:]}: {qui}')
+    # qui = bg(round(rgb[0] * 255), round(rgb[1] * 255), round(rgb[2] * 255)) + \
+    #     "                " + bg.rs
+    # print(f'{station_name[11:]}: {qui}')
 
 
 if __name__ == "__main__":

@@ -6,9 +6,12 @@ from pydub import AudioSegment
 import subprocess
 import os
 from collections import deque
+import websocket
+import json
 
 from colour import get_colour
 from red import spring_cleaning
+import config
 
 
 stations = {
@@ -78,11 +81,25 @@ def write_stream(station_names, file_duration):
     # assuming here that relevant files have been written
     for file in files:
         mp3_to_wav(file)  # convert mp3 to WAV file
-        get_colour(file)  # analyze
+
+        # retrieve a color value from music sample
+        audio_representation = get_colour(file)  # analyze
+        print(
+            f'AUDIO REPRESENTATION: {audio_representation} {type(audio_representation)}')
+        data_encoded = json.dumps(audio_representation).encode(
+            'utf-8')  # data serialized
+
+        # send this to websocket server
+        websocket.enableTrace(True)
+        ws = websocket.WebSocket()
+        ws.connect("ws://localhost:8000/ws/2")
+        ws.send(data_encoded)
+        print(ws.recv())
+        ws.close()
 
     # delete all files older than one minute
     spring_cleaning()
 
 
 if __name__ == "__main__":
-    hsl('soundbytes/SOMACLQ_1662489047')
+    get_colour('soundbytes/SOMAMTL_1665971952')
