@@ -26,7 +26,8 @@ stations = {
     'SOMALUSH': 'https://ice1.somafm.com/lush-128-mp3',
     'SOMAPOPT': 'https://ice1.somafm.com/poptron-128-mp3',
     'SOMAVPR': 'https://ice2.somafm.com/vaporwaves-128-mp3',
-    'SOMAIND': 'https://ice4.somafm.com/indiepop-128-mp3'
+    'SOMAIND': 'https://ice4.somafm.com/indiepop-128-mp3',
+    'BFF': 'https://stream.bff.fm/1/mp3.mp3'
 }
 
 

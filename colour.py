@@ -7,6 +7,9 @@ import numpy as np
 import soundfile as sf
 import hsluv
 from sty import bg
+from datetime import datetime
+import psycopg2
+
 
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_conversions import convert_color
@@ -92,10 +95,42 @@ def lab_to_rgb(l, a, b):
     # print(qui)
 
 
+def get_current_show(station_name):
+    utc_now = datetime.utcnow()
+    utc_now_day = utc_now.strftime('%w')
+    utc_now_hour = utc_now.hour
+
+    # select statement where day is the same and hour is same as or equal to begin and less than end (this select statement could be improved upon over time)
+    conn = psycopg2.connect('postgresql://postgres:BBWjnHbbic4d0qoJnQYe@containers-us-west-46.railway.app:7052/railway')
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT show, dj FROM schedules WHERE station = (%s) AND begin_day = (%s) AND begin_hour <= (%s) AND end_hour > (%s)',
+                   (station_name, utc_now_day, utc_now_hour, utc_now_hour))
+
+    shows = cursor.fetchall()
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    if len(shows) == 1:
+        return shows[0]
+    else:
+        print('problem here!')
+        return
+
+
 def get_colour(file_name):
     splat = file_name.split("_")
     timestamp = splat[1]
-    station_name = splat[0].split("/")[1]
+    station_name = splat[0].split("/")[1].lower()
+    show, dj = '', ''
+
+    try:
+        print(f'STATION NAME INPUT: {station_name}')
+        show_deets = get_current_show(station_name)
+        show, dj = show_deets[0], show_deets[1]
+    except Exception as e:
+        print(e)
 
     # retrieving initial hsl values
     t = get_tempo('cnn', f'{file_name}.wav')
@@ -111,38 +146,23 @@ def get_colour(file_name):
         pitch_values['max'], pitch_values['min'], p) * 100)
 
     # HSL
-    rgb = hsluv.hsluv_to_rgb(
+    [r, g, b] = hsluv.hsluv_to_rgb(
         [(tempo_percentile / 100) * 180 + 180, loudness_percentile, pitch_percentile])
+    rgb = round(r * 255), round(g * 255), round(b * 255)
 
     return {
         'station': station_name,
+        'show': show,
+        'dj': dj,
         'rgb': rgb,
         'timestamp': timestamp
     }
 
-    # printing hsl input values, to be converted to rgb
-    # print(f'TEMPO: {round(t, 2)} bpm ({tempo_percentile}%)')
-    # print(f'LOUDNESS: {round(l, 2)} db ({loudness_percentile}%)')
-    # print(f'PITCH: {round(p, 2)} hz ({pitch_percentile}%)')
 
-    # LAB IMPLEMENTATION
-    # l = pitch_percentile * 120 - 60
-    # a = loudness_percentile * 120 - 60
-    # b = tempo_percentile * 120 - 60
-    # [r, g, b] = lab_to_rgb(l, a, b)
-
-    # # print(f'RED: {red}, GREEN: {green}, BLUE: {blue}')
+if __name__ == "__main__":
+    pass
+    # print(get_colour('hi/bff_good'))
 
     # qui = bg(round(rgb[0] * 255), round(rgb[1] * 255), round(rgb[2] * 255)) + \
     #     "                " + bg.rs
     # print(f'{station_name[11:]}: {qui}')
-
-
-if __name__ == "__main__":
-    # qui = bg(240, 10, 10) + \
-    #     "This background color represents the musical value." + bg.rs
-    # print(qui)
-    # L: 0 to 100
-    # a: -128 to 127
-    # b: -128 to 127
-    print(get_chroma_range(tempo_values['max'], tempo_values['min'], 153))

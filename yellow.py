@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # station_key = sys.argv[1]
     # print(f'TESTING STATION {station_key}')
 
-    station_names = ['SOMADSO', 'SOMAMTL', 'SOMADESI']
+    station_names = ['BFF']
     file_duration = 20
 
     schedule.every(file_duration).seconds.do(
