@@ -9,6 +9,7 @@ import hsluv
 from sty import bg
 from datetime import datetime
 import psycopg2
+import time
 
 
 from colormath.color_objects import sRGBColor, LabColor
@@ -95,47 +96,47 @@ def lab_to_rgb(l, a, b):
     # print(qui)
 
 
-def get_current_show(station_name):
-    utc_now = datetime.utcnow()
-    utc_now_day = utc_now.strftime('%w')
-    utc_now_hour = utc_now.hour
+# def get_current_show(station_name):
+#     splat = file_name.split(".")[0].split("_")
+#     print(f'Checkpoint line 125 of colour.py. What we want to split comes to {splat}')
+#     timestamp = splat[1]
+#     station_name = splat[0].split("/")[1].lower()
+#     show, dj = '', ''
 
-    # select statement where day is the same and hour is same as or equal to begin and less than end (this select statement could be improved upon over time)
-    conn = psycopg2.connect('postgresql://postgres:BBWjnHbbic4d0qoJnQYe@containers-us-west-46.railway.app:7052/railway')
-    cursor = conn.cursor()
+#     try:
+#         show_deets = get_current_show(station_name)
+#         show, dj = show_deets[0], show_deets[1]
+#     except Exception as e:
+#         print(e)
 
-    cursor.execute('SELECT show, dj FROM schedules WHERE station = (%s) AND begin_day = (%s) AND begin_hour <= (%s) AND end_hour > (%s)',
-                   (station_name, utc_now_day, utc_now_hour, utc_now_hour))
+#     utc_now = datetime.utcnow()
+#     utc_now_day = utc_now.strftime('%w')
+#     utc_now_hour = utc_now.hour
 
-    shows = cursor.fetchall()
-    conn.commit()
-    cursor.close()
-    conn.close()
+#     # select statement where day is the same and hour is same as or equal to begin and less than end (this select statement could be improved upon over time)
+#     conn = psycopg2.connect('postgresql://postgres:BBWjnHbbic4d0qoJnQYe@containers-us-west-46.railway.app:7052/railway')
+#     cursor = conn.cursor()
 
-    if len(shows) == 1:
-        return shows[0]
-    else:
-        print('problem here!')
-        return
+#     cursor.execute('SELECT show, dj FROM schedules WHERE station = (%s) AND begin_day = (%s) AND begin_hour <= (%s) AND end_hour > (%s)',
+#                    (station_name, utc_now_day, utc_now_hour, utc_now_hour))
 
+#     shows = cursor.fetchall()
+#     conn.commit()
+#     cursor.close()
+#     conn.close()
+
+#     if len(shows) == 1:
+#         return shows[0]
+#     else:
+#         print('problem here!')
+#         return
 
 def get_colour(file_name):
-    splat = file_name.split("_")
-    timestamp = splat[1]
-    station_name = splat[0].split("/")[1].lower()
-    show, dj = '', ''
-
-    try:
-        print(f'STATION NAME INPUT: {station_name}')
-        show_deets = get_current_show(station_name)
-        show, dj = show_deets[0], show_deets[1]
-    except Exception as e:
-        print(e)
-
     # retrieving initial hsl values
-    t = get_tempo('cnn', f'{file_name}.wav')
-    l = loudness(f'{file_name}.wav')
-    p = pitch(f'{file_name}.wav')
+    t = get_tempo('cnn', f'{file_name}')
+    l = loudness(f'{file_name}')
+    p = pitch(f'{file_name}')
+
 
     # translating audio values into chroma value
     tempo_percentile = round(get_chroma_range(
@@ -145,22 +146,27 @@ def get_colour(file_name):
     pitch_percentile = round(get_chroma_range(
         pitch_values['max'], pitch_values['min'], p) * 100)
 
-    # HSL
+    print(f'Checkpoint 3: retrieved values.')
+    print(f'Show: {show} on {station_name}.')
+    print(f'Tempo: {t} = {tempo_percentile}%')
+    print(f'Loudness: {l} = {loudness_percentile}%')
+    print(f'Pitch: {p} = {pitch_percentile}%')
+
+    # RGB
     [r, g, b] = hsluv.hsluv_to_rgb(
         [(tempo_percentile / 100) * 180 + 180, loudness_percentile, pitch_percentile])
     rgb = round(r * 255), round(g * 255), round(b * 255)
 
     return {
-        'station': station_name,
-        'show': show,
-        'dj': dj,
-        'rgb': rgb,
-        'timestamp': timestamp
+        'current_colors':  {
+            'station': station_name,
+            'rgb': rgb
+        }
     }
 
 
 if __name__ == "__main__":
-    pass
+    print(time.time())
     # print(get_colour('hi/bff_good'))
 
     # qui = bg(round(rgb[0] * 255), round(rgb[1] * 255), round(rgb[2] * 255)) + \

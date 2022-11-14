@@ -247,16 +247,21 @@ def _to_sliding_window(data, window_length, hop_length):
 
 
 def get_tempo(model_name, file_path):
-    # initialize the model (may be re-used for multiple files)
-    classifier = TempoClassifier(model_name)
+    try:
+        # initialize the model (may be re-used for multiple files)
+        classifier = TempoClassifier(model_name)
 
-    # read the file's features
-    features = read_features(file_path)
+        # read the file's features
+        features = read_features(file_path)
 
-    # # estimate the global tempo
-    tempo = classifier.estimate_tempo(features, interpolate=False)
-    print(tempo)
-    return tempo
+        # # estimate the global tempo
+        tempo = classifier.estimate_tempo(features, interpolate=False)
+        print(tempo)
+        return tempo
+    except CouldntDecodeError:
+        print('Could not decode.')
+    except Error as e:
+        print('oh dear')
 
 
 if __name__ == "__main__":
