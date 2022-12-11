@@ -261,7 +261,7 @@ def get_tempo(model_name, file_path):
     except CouldntDecodeError:
         print('Could not decode.')
     except Error as e:
-        print('oh dear')
+        print(f'line 264, tempo: {e}')
 
 
 if __name__ == "__main__":

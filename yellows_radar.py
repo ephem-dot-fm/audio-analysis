@@ -9,7 +9,7 @@ from collections import deque
 import websocket
 import json
 
-from colour import get_colour
+import colour
 from red import spring_cleaning
 import config
 
@@ -48,13 +48,13 @@ def stream_to_audio_file(station_url, file_name):
 
 
 def audio_file_to_wav(file):
-    print(f'Checkpoint line 51.  The file we are looking for is {file}')
     src = file
     dst = f'{file[:-4]}.wav'
 
     try:
         audSeg = AudioSegment.from_file(src, format=file[-3:])
         audSeg.export(dst, format="wav")
+        return dst
     except FileNotFoundError as f:
         print("Couldn't find that file homie")
     except Exception as e:
@@ -78,7 +78,6 @@ def write_stream(station_names, file_duration):
             args=(stations[station]['stream_url'], file_name))
         processes.append(process)
 
-    print(f'Checkpoint 2. The processes for this station are: {processes}')
 
     for process in processes:
         process.start()
@@ -89,26 +88,38 @@ def write_stream(station_names, file_duration):
         process.terminate()
 
     for file in files:
-        print(f'Checkpoint line 91.  The file is: {file}')
-        audio_file_to_wav(file) 
+        wav_file = audio_file_to_wav(file) 
 
         # retrieve a color value from music sample
-        wav_file = f'{file[:-4]}.wav'
-        audio_representation = get_colour(wav_file)  # analyze
-        data_encoded = json.dumps(audio_representation).encode('utf-8')  # data serialized
+        try:
+            station = wav_file.split(".")[0].split("_")[0].split("/")[1].lower()
+            audio_stats = colour.get_colour(wav_file)  # analyze
+            audio_stats['station'] = station
+            print(f'Line 97 in yellows radar. wav_file{wav_file}, station: {station}, audio statsaudio_stats: {audio_stats}')
+            audio_stats_wrapper = {
+                'audio_values': audio_stats
+            }
+            audio_stats_encoded = json.dumps(audio_stats_wrapper).encode('utf-8')  # audio stats serialized
 
-        # send this to websocket server
-        websocket.enableTrace(True)
-        ws = websocket.WebSocket()
-        ws.connect("ws://localhost:8000/ws/2")
-        ws.send(data_encoded)
-        print(ws.recv())
-        ws.close()
+            # send this to websocket server
+            websocket.enableTrace(True)
+            ws = websocket.WebSocket()
+            ws.connect("ws://localhost:8000/ws/2")
+            ws.send(audio_stats_encoded)
+            print(ws.recv())
+            ws.close()
+            
+        except Exception as e:
+            print(f"An exception occurred in write_stream within yellows_radar.py.  It is {e}.")
 
     # delete all files older than one minute
     spring_cleaning()
 
 
 if __name__ == "__main__":
-    example_file = 'soundbytes/KOOP_1668384020.mp3'
-    print(example_file[:-3])
+    websocket.enableTrace(True)
+    ws = websocket.WebSocket()
+    ws.connect("ws://websocket-server-production.up.railway.app/ws/2")
+    ws.send("hello")
+    print(ws.recv())
+    ws.close()
