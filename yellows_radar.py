@@ -104,7 +104,7 @@ def write_stream(station_names, file_duration):
             # send this to websocket server
             websocket.enableTrace(True)
             ws = websocket.WebSocket()
-            ws.connect("ws://localhost:8000/ws/2")
+            ws.connect("wss://websocket-server-production.up.railway.app/ws")
             ws.send(audio_stats_encoded)
             print(ws.recv())
             ws.close()
@@ -119,7 +119,7 @@ def write_stream(station_names, file_duration):
 if __name__ == "__main__":
     websocket.enableTrace(True)
     ws = websocket.WebSocket()
-    ws.connect("ws://websocket-server-production.up.railway.app/ws/2")
+    ws.connect("ws://websocket-server-production.up.railway.app/ws")
     ws.send("hello")
     print(ws.recv())
     ws.close()
