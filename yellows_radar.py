@@ -119,7 +119,7 @@ def write_stream(station_names, file_duration):
 if __name__ == "__main__":
     websocket.enableTrace(True)
     ws = websocket.WebSocket()
-    ws.connect("ws://websocket-server-production.up.railway.app/ws")
+    ws.connect("wss://websocket-server-production.up.railway.app/ws")
     ws.send("hello")
     print(ws.recv())
     ws.close()
