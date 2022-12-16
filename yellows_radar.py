@@ -9,6 +9,9 @@ from collections import deque
 import websocket
 import json
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import colour
 from red import spring_cleaning
 import config
@@ -104,7 +107,7 @@ def write_stream(station_names, file_duration):
             # send this to websocket server
             websocket.enableTrace(True)
             ws = websocket.WebSocket()
-            ws.connect("wss://websocket-server-production.up.railway.app/ws")
+            ws.connect(os.getenv("LOCAL_WEBSOCKET_URL"))
             ws.send(audio_stats_encoded)
             print(ws.recv())
             ws.close()
@@ -119,7 +122,7 @@ def write_stream(station_names, file_duration):
 if __name__ == "__main__":
     websocket.enableTrace(True)
     ws = websocket.WebSocket()
-    ws.connect("wss://websocket-server-production.up.railway.app/ws")
+    ws.connect(os.getenv("LOCAL_WEBSOCKET_URL"))
     ws.send("hello")
     print(ws.recv())
     ws.close()
