@@ -76,7 +76,7 @@ pickleshare==0.7.5
 platformdirs==2.5.4
 prometheus-client==0.14.1
 prompt-toolkit==3.0.36
-protobuf==4.21.9
+protobuf
 psutil==5.9.4
 psycopg2==2.9.3
 psycopg2-binary==2.9.5
