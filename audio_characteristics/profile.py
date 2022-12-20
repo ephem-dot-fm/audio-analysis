@@ -1,4 +1,4 @@
-from tempo import get_tempo
+from audio_characteristics.tempo import get_tempo
 import pyloudnorm as pyln
 import librosa
 import numpy as np
@@ -28,7 +28,7 @@ def pitch(file):
 
     return regular_mean
 
-def get_colour(file_name):
+def get_audio_characteristics(file_name):
     try:
         return {
                 'station': '',
